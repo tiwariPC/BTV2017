@@ -12,8 +12,10 @@ from numpy import arange, sin, pi
 def main() :
 
     # Files
-    f_ntuple            = ROOT.TFile("ntupleTest2017BTuned50000.root",    	 "READ")
-    f_results           = ROOT.TFile("results2017B_mixed.root", 	     "RECREATE")
+    # f_ntuple            = ROOT.TFile("ntupleTest2017BTuned50000.root",    	 "READ")
+    # f_results           = ROOT.TFile("results2017B_mixed.root", 	     "RECREATE")
+    f_ntuple            = ROOT.TFile("ntupleTest2017BTuned_2017_07_11_50k.root",    	 "READ")
+    f_results           = ROOT.TFile("results2017B_mixed_2017_07_11.root", 	     "RECREATE")
     f_results.cd()
 
     # Functions
@@ -76,12 +78,14 @@ def makePlots(f_ntuple, f_results) :
 			print "calo phi: ",			event.caloJet_phi[i],		" offline phi: ",	event.offJet_phi[ event.caloJet_offmatch[i] ]
 			print "offline csv: ", 			event.offJet_csv[  event.caloJet_offmatch[i] ]
 			h_csv_inc.Fill( 			event.offJet_csv[ event.caloJet_offmatch[i] ] )
-			h_csv_inc_log.Fill( 		-math.log( 1 -	event.offJet_csv[ event.caloJet_offmatch[i] ] ) )
+                        if event.offJet_csv[ event.caloJet_offmatch[i] ] < 1. :
+                            h_csv_inc_log.Fill( 		-math.log( 1 -	event.offJet_csv[ event.caloJet_offmatch[i] ] ) )
 			if event.caloJet_hltBTagCaloCSVp05Double[i] :
 				print "passes calo filter"
 				h_csv_afcalo.Fill(			event.offJet_csv[ event.caloJet_offmatch[i] ] )
-				h_csv_afcalo_log.Fill( 	-math.log( 1 - 	event.offJet_csv[ event.caloJet_offmatch[i] ] ) )	
-				h_csv_inc_calo_log.Fill( -math.log( 1 -   event.offJet_csv[ event.caloJet_offmatch[i] ] ) )
+                                if event.offJet_csv[ event.caloJet_offmatch[i] ] != 1. :
+                                    h_csv_afcalo_log.Fill( 	-math.log( 1 - 	event.offJet_csv[ event.caloJet_offmatch[i] ] ) )	
+                                    h_csv_inc_calo_log.Fill( -math.log( 1 -   event.offJet_csv[ event.caloJet_offmatch[i] ] ) )
 
 	print "PF JET SECTION : # pf jet = ", event.pfJet_num
 	for i in range(0, event.pfJet_num-1) :	
@@ -95,9 +99,10 @@ def makePlots(f_ntuple, f_results) :
 			if event.pfJet_hltBTagPFCSVp070Triple[i] :
 				print "passes pf filter"
 				h_csv_afpf.Fill(				event.offJet_csv[ event.pfJet_offmatch[i] ] )
-				h_csv_afpf_log.Fill( 	-math.log( 1 - 	event.offJet_csv[ event.pfJet_offmatch[i] ] ) )
-				h_csv_inc_pf_log.Fill(	-math.log( 1 -  event.offJet_csv[ event.pfJet_offmatch[i] ] ) )
-				h_csv_calo_pf_log.Fill(	-math.log( 1 -  event.offJet_csv[ event.pfJet_offmatch[i] ] ) )	
+                                if event.offJet_csv[ event.pfJet_offmatch[i] ] < 1. :
+                                    h_csv_afpf_log.Fill( 	-math.log( 1 - 	event.offJet_csv[ event.pfJet_offmatch[i] ] ) )
+                                    h_csv_inc_pf_log.Fill(	-math.log( 1 -  event.offJet_csv[ event.pfJet_offmatch[i] ] ) )
+                                    h_csv_calo_pf_log.Fill(	-math.log( 1 -  event.offJet_csv[ event.pfJet_offmatch[i] ] ) )	
 
 
     h_csv_inc_calo_log.Divide(	h_csv_inc_log		)
