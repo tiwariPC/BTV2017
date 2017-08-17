@@ -7,15 +7,13 @@ from ROOT import TH1F, TH2F
 from matplotlib.pyplot import figure, show
 from numpy import arange, sin, pi
 
-# Performances of the PF online b-tagging sequence based on events triggered by PFHT800, and studying the CSV cut of the HLT_PFHT450_SixJet40_BTagCSV_p056
+# Performances of the PF online b-tagging sequence based on events triggered by HLT_HT300PT30_QuadJet_75_60_45_40, and studying the CSV cut of the HLT_HT300PT30_QuadJet_75_60_45_40_TripeCSV_p07
 
 def main() :
 
     # Files
-    # f_ntuple            = ROOT.TFile("ntupleTest2017BTuned50000.root",    	 "READ")
-    # f_results           = ROOT.TFile("results2017B_mixed.root", 	     "RECREATE")
     f_ntuple            = ROOT.TFile("ntupleTest2017BTuned_2017_07_11_50k.root",    	 "READ")
-    f_results           = ROOT.TFile("results2017B_mixed_2017_07_11.root", 	     "RECREATE")
+    f_results           = ROOT.TFile("results2017B_mixed_test.root", 	     "RECREATE")
     f_results.cd()
 
     # Functions
@@ -49,24 +47,7 @@ def makePlots(f_ntuple, f_results) :
 	print "New event --------"
 	print
         
-        #print
-        #print "PF jets"
-        #for i in range(0, event.caloJet_num) :
-        #    print "i:       ", i
-        #    print "pt:      ", event.caloJet_pt[i]
-       	#    print "eta:     ", event.caloJet_eta[i]
-        #    print "phi:     ", event.caloJet_phi[i]
-        #    print "matched: ", event.caloJet_offmatch[i]
-
-        #print
-        #print "Offline jets"
-        #for i in range(0, event.offJet_num) :
-        #    print "i:       ", i
-        #    print "pt:      ", event.offJet_pt[i]
-        #    print "eta:     ", event.offJet_eta[i]
-        #    print "phi:     ", event.offJet_phi[i]
-
-	# FROM HLT_HT300PT30_QuadJet_75_60_45_40_TripeCSV_p07_v2
+        if not event.HLT_HT300PT30_QuadJet_75_60_45_40 : continue
 
 	print "CALO JET SECTION : # calo jet = ", event.caloJet_num
 	for i in range(0, event.caloJet_num-1) :	
