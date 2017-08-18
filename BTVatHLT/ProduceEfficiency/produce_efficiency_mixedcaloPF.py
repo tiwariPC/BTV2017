@@ -62,7 +62,6 @@ def makePlots(f_ntuple, f_results) :
 	print
         
         if not event.HLT_PFHT300PT30_QuadPFJet_75_60_45_40 : continue
-        # if not event.HLT_PFHT890_ : continue
 
 	print "CALO JET SECTION : # calo jet = ", event.caloJet_num
 	for i in range(0, event.caloJet_num-1) :	
@@ -121,30 +120,7 @@ def makePlots(f_ntuple, f_results) :
                                     h_csv_calo_pf_log.Fill(	-math.log( 1 -  event.offJet_csv[ event.pfJet_offmatch[i] ] ) )	
 
                         eff_csv_inc_pf.Fill(passed, event.offJet_csv[ event.pfJet_offmatch[i] ] )
-
-    # h_csv_inc_calo_log.Divide(	h_csv_inc_log_4Calo		)
-    # h_csv_inc_pf_log.Divide(	h_csv_inc_log_4PF		)
-    # h_csv_calo_pf_log.Divide(	h_csv_afcalo_log	)
-
-    # h_csv_inc_calo.Divide(	h_csv_inc_4Calo		)
-    # h_csv_inc_pf.Divide(	h_csv_inc_4PF		)
-    # h_csv_calo_pf.Divide(	h_csv_afcalo	)
-
-    # eff_csv_inc_calo_log = h_csv_inc_calo_log.Clone()
-    # eff_csv_inc_pf_log = h_csv_inc_pf_log.Clone()
-    # eff_csv_calo_pf_log = h_csv_calo_pf_log.Clone()
-    # eff_csv_inc_calo = h_csv_inc_calo.Clone()
-    # eff_csv_inc_pf = h_csv_inc_pf.Clone()
-    # eff_csv_calo_pf = h_csv_calo_pf.Clone()
-
-
-    # eff_csv_inc_calo_log.Divide ( h_csv_inc_calo_log, h_csv_inc_log_4Calo, 1.,1.,'B' )
-    # eff_csv_inc_pf_log.Divide   ( h_csv_inc_pf_log, h_csv_inc_log_4PF, 1.,1.,'B'     )
-    # eff_csv_calo_pf_log.Divide  ( h_csv_calo_pf_log, h_csv_afcalo_log, 1.,1.,'B'     )
-
-    # eff_csv_inc_calo.Divide     ( h_csv_inc_calo, h_csv_inc_4Calo, 1.,1.,'B'         )
-    # eff_csv_inc_pf.Divide       ( h_csv_inc_pf, h_csv_inc_4PF, 1.,1.,'B'             )
-    # eff_csv_calo_pf.Divide      ( h_csv_calo_pf, h_csv_afcalo, 1.,1.,'B'             )
+                        if event.offJet_csv[ event.pfJet_offmatch[i] ] < 1. : eff_csv_inc_pf_log.Fill(passed, -math.log( 1 -  event.offJet_csv[ event.pfJet_offmatch[i] ] ) )
 
 
     f_results.Write()
