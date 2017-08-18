@@ -1,3 +1,4 @@
+
 import ROOT as rt
 import CMS_lumi, tdrstyle
 import array
@@ -5,14 +6,14 @@ import array
 #set the tdr style
 tdrstyle.setTDRStyle()
 
-file = rt.TFile("results2017B_mixed_2017_07_11.root","READ")
+file = rt.TFile("results2017C_mixed_test.root","READ")
 
 #change the CMS_lumi variables (see CMS_lumi.py)
 CMS_lumi.lumi_7TeV = "4.8 fb^{-1}"
 CMS_lumi.lumi_8TeV = "18.3 fb^{-1}"
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Preliminary"
-CMS_lumi.lumi_sqrtS = "2017B (13 TeV)" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
+CMS_lumi.lumi_sqrtS = "2017C (13 TeV)" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
 
 iPos = 11
 if( iPos==0 ): CMS_lumi.relPosX = 0.12
@@ -21,19 +22,6 @@ H_ref = 600;
 W_ref = 800; 
 W = W_ref
 H  = H_ref
-
-# 
-# Simple example of macro: plot with CMS name and lumi text
-#  (this script does not pretend to work in all configurations)
-# iPeriod = 1*(0/1 7 TeV) + 2*(0/1 8 TeV)  + 4*(0/1 13 TeV) 
-# For instance: 
-#               iPeriod = 3 means: 7 TeV + 8 TeV
-#               iPeriod = 7 means: 7 TeV + 8 TeV + 13 TeV 
-#               iPeriod = 0 means: free form (uses lumi_sqrtS)
-# Initiated by: Gautier Hamel de Monchenault (Saclay)
-# Translated in Python by: Joshua Hardenbrook (Princeton)
-# Updated by:   Dinko Ferencek (Rutgers)
-#
 
 iPeriod = 0
 
@@ -55,8 +43,10 @@ canvas.SetBottomMargin( B/H )
 canvas.SetTickx(0)
 canvas.SetTicky(0)
 canvas.SetBatch()
+canvas.SetGrid()
 
-h =  rt.TH1F("h","h; -log(1-CSVv2 discriminator); Efficiency",50,0,7)
+h =  rt.TH1F("h","h; offline CSVv2 discriminator; Efficiency",50,0,1)
+# h =  rt.TH1F("h","h; -log(1-CSVv2 discriminator); Efficiency",50,0,7)
 
 h.SetMaximum(1.4)
 
@@ -70,8 +60,11 @@ yAxis.SetTitleOffset(1)
 h.Draw()
 
 
-data1 = file.Get("h_csv_inc_calo_log")
-data2 = file.Get("h_csv_inc_pf_log")
+# data1 = file.Get("h_csv_inc_calo_log")
+# data2 = file.Get("h_csv_inc_pf_log")
+data1 = file.Get("eff_csv_inc_calo")
+data2 = file.Get("eff_csv_inc_pf")
+
 MC   = file.Get("h_csvafterfilterlog")
 
 #MC.Draw("histsame")
@@ -79,12 +72,12 @@ data1.SetMarkerStyle(20)
 data1.SetMarkerSize(0.9)
 data1.SetMarkerColor(rt.kBlue)
 #data.Draw("esamex0")
-data1.Draw("psame")
+data1.Draw("same")
 
 data2.SetMarkerStyle(20)
 data2.SetMarkerSize(0.9)
 data2.SetMarkerColor(rt.kRed)
-data2.Draw("psame")
+data2.Draw("same")
 
 #draw the lumi text on the canvas
 CMS_lumi.CMS_lumi(canvas, iPeriod, iPos)
@@ -95,89 +88,13 @@ canvas.RedrawAxis()
 frame = canvas.GetFrame()
 frame.Draw()
 
-leg = rt.TLegend(.6,.4,.85,.5)
-leg.AddEntry(data1,'calo sequence','p')
-leg.AddEntry(data2,'PF sequence','p')
+leg = rt.TLegend(.65,.2,.9,.3)
+leg.AddEntry(data1,'calo sequence','pe')
+leg.AddEntry(data2,'PF sequence','pe')
 leg.Draw('same')
 canvas.Modified()
 canvas.Update()
 
-#set the colors and size for the legend
-# histLineColor = rt.kOrange+7
-# histFillColor = rt.kOrange-2
-# markerSize  = 1.0
-
-# latex = rt.TLatex()
-# n_ = 2
-
-# x1_l = 0.92
-# y1_l = 0.60
-
-# dx_l = 0.30
-# dy_l = 0.18
-# x0_l = x1_l-dx_l
-# y0_l = y1_l-dy_l
-
-# legend =  rt.TPad("legend_0","legend_0",x0_l,y0_l,x1_l, y1_l )
-# #legend.SetFillColor( rt.kGray )
-# legend.Draw()
-# legend.cd()
-
-# ar_l = dy_l/dx_l
-# #gap_ = 0.09/ar_l
-# gap_ = 1./(n_+1)
-# bwx_ = 0.12
-# bwy_ = gap_/1.5
-
-# x_l = [1.2*bwx_]
-# #y_l = [1-(1-0.10)/ar_l]
-# y_l = [1-gap_]
-# ex_l = [0]
-# ey_l = [0.04/ar_l]
-
-# #array must be converted 
-# x_l = array.array("f",x_l)
-# ex_l = array.array("f",ex_l)
-# y_l = array.array("f",y_l)
-# ey_l = array.array("f",ey_l)
-
-# gr_l1 =  rt.TGraphErrors(1, x_l, y_l, ex_l, ey_l)
-# gr_l2 =  rt.TGraphErrors(1, x_l, y_l, ex_l, ey_l)
-
-# rt.gStyle.SetEndErrorSize(0)
-# gr_l1.SetMarkerSize(0.9)
-# gr_l1.SetMarkerColor(rt.kBlue)
-# gr_l1.Draw("0P")
-
-# gr_l2.SetMarkerSize(0.9)
-# gr_l2.SetMarkerColor(rt.kRed)
-# gr_l2.Draw("0P")
-
-# latex.SetTextFont(42)
-# latex.SetTextAngle(0)
-# latex.SetTextColor(rt.kBlack)    
-# latex.SetTextSize(0.25)    
-# latex.SetTextAlign(12) 
-
-# box_ = rt.TBox()
-# xx_ = x_l[0]
-# yy_ = y_l[0]
-# latex.DrawLatex(xx_+1.*bwx_,yy_,"calo sequence")
-
-#latex.DrawLatex(xx_+1.*bwx_,yy_,"")
-
-#yy_ -= gap_
-#box_.SetLineStyle( rt.kSolid )
-#box_.SetLineWidth( 1 )
-# box_.SetLineColor( kBlack )
-#box_.SetLineColor( histLineColor )
-#box_.SetFillColor( histFillColor )
-#box_.DrawBox( xx_-bwx_/2, yy_-bwy_/2, xx_+bwx_/2, yy_+bwy_/2 )
-#box_.SetFillStyle(0)
-#box_.DrawBox( xx_-bwx_/2, yy_-bwy_/2, xx_+bwx_/2, yy_+bwy_/2 )
-#Draw Z->ee text
-#latex.DrawLatex(xx_+1.*bwx_,yy_,"Z #rightarrow e^{+}e^{-} (MC)")
-# latex.DrawLatex(xx_+2.*bwx_,yy_-.1,"pf sequence")
 
 #update the canvas to draw the legend
 canvas.Update()
