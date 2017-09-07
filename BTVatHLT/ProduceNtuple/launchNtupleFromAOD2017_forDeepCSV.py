@@ -760,11 +760,11 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
                     if dR<0.3:
                         onineCSV = max(0.,btagsCSVOnline.product().value(j))
                         break
-               for j in range(0,btagsDCSVOnline.product().size()):
+                for j in range(0,btagsDCSVOnline.product().size()):
                     jetB = btagsDCSVOnline.product().key(j).get()
                     dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
                     if dR<0.3:
-                        onineCSV = max(0.,btagsDCSVOnline.product().value(j))
+                        onineDeepCSV = max(0.,btagsDCSVOnline.product().value(j))
                         break
                 onPFJet_csv[i] = onlineCSV
                 onPFJet_deepcsv[i] = onlineDeepCSV
