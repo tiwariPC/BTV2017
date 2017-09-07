@@ -241,7 +241,13 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
         HLTprocess = "HLT2"
     print "HLTprocess=",HLTprocess
     
-    btags, btagLabel = Handle("edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>"),("pfDeepCSVJetTags:probb")#("pfCombinedInclusiveSecondaryVertexV2BJetTags") #("pfCombinedSecondaryVertexBJetTags")
+    btags, btagLabel = Handle("edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>"),("pfCombinedInclusiveSecondaryVertexV2BJetTags") #("pfCombinedSecondaryVertexBJetTags")
+    
+    btags_b, btagLabel_b = Handle("edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>"),("pfDeepCSVJetTags:probb")#("pfCombinedInclusiveSecondaryVertexV2BJetTags") #("pfCombinedSecondaryVertexBJetTags")
+    btags_bb, btagLabel_bb = Handle("edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>"),("pfDeepCSVJetTags:probbb")#("pfCombinedInclusiveSecondaryVertexV2BJetTags")
+    
+    btagsCSVOnline, btagLabelCSVOnline = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ("hltCombinedSecondaryVertexBJetTagsPF")
+    btagsDCSVOnline, btagLabelDCSVOnline = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ("hltDeepCombinedSecondaryVertexBJetTagsPF:probb")
     
     if MC:
 #        btagLabel = ("combinedInclusiveSecondaryVertexV2BJetTags")
@@ -416,6 +422,10 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
     tree.Branch( 'pfJet_phi', pfJet_phi, 'pfJet_phi[pfJet_num]/F' )
     pfJet_mass = array( 'f', maxJets*[ 0 ] )
     tree.Branch( 'pfJet_mass', pfJet_mass, 'pfJet_mass[pfJet_num]/F' )
+    onPFJet_csv = array( 'f', maxJets*[ 0 ] )
+    tree.Branch( 'onPFJet_csv', onPFJet_csv, 'onPFJet_csv[pfJet_num]/F' )
+    onPFJet_deepcsv = array( 'f', maxJets*[ 0 ] )
+    tree.Branch( 'onPFJet_deepcsv', onPFJet_deepcsv, 'onPFJet_deepcsv[pfJet_num]/F' )
     pfJet_offmatch = array( 'i', maxJets*[ 0 ] )
     tree.Branch( 'pfJet_offmatch', pfJet_offmatch, 'pfJet_offmatch[pfJet_num]/I' )
     pfJet_btagged ={}
@@ -435,6 +445,8 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
     tree.Branch( 'offJet_mass', offJet_mass, 'offJet_mass[offJet_num]/F' )
     offJet_csv = array( 'f', maxJets*[ 0 ] )
     tree.Branch( 'offJet_csv', offJet_csv, 'offJet_csv[offJet_num]/F' )
+    offJet_deepcsv = array( 'f', maxJets*[ 0 ] )
+    tree.Branch( 'offJet_deepcsv', offJet_deepcsv, 'offJet_deepcsv[offJet_num]/F' )
     offJet_pfmatch = array( 'i', maxJets*[ 0 ] )
     tree.Branch( 'offJet_pfmatch', offJet_pfmatch, 'offJet_pfmatch[offJet_num]/I' )
     offJet_calomatch = array( 'i', maxJets*[ 0 ] )
@@ -574,6 +586,10 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
         event.getByLabel(lumiscalerLabel, lumiscaler)        
         ## AOD
         event.getByLabel(btagLabel, btags)
+        event.getByLabel(btagLabel_b, btags_b)
+        event.getByLabel(btagLabel_bb, btags_bb)
+        event.getByLabel(btagLabelCSVOnline, btagsCSVOnline)
+        event.getByLabel(btagLabelDCSVOnline, btagsDCSVOnline)
 
         nVertices[0] = recoVertexs.product().size()
         run[0] = event.eventAuxiliary().run()
@@ -595,17 +611,32 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
                 offJet_mass[i] = jet.mass()
                 ## AOD
                 offlineCSV = -1.
+                offlineDeepCSV = -1.
+                offlineDeepCSV_b = -1.
+                offlineDeepCSV_bb = -1.
                 for j in range(0,btags.product().size()):
                     jetB = btags.product().key(j).get()
                     dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
                     if dR<0.3:
                         offlineCSV = max(0.,btags.product().value(j))
                         break
-                
+                for j in range(0,btags_b.product().size()):
+                    jetB = btags_b.product().key(j).get()
+                    dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
+                    if dR<0.3:
+                        offlineDeepCSV_b = max(0.,btags_b.product().value(j))
+                        break
+                for j in range(0,btags_bb.product().size()):
+                    jetB = btags_bb.product().key(j).get()
+                    dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
+                    if dR<0.3:
+                        offlineDeepCSV_bb = max(0.,btags_bb.product().value(j))
+                        break
+                offlineDeepCSV = offlineDeepCSV_b + offlineDeepCSV_bb
+                offJet_deepcsv[i] = offlineDeepCSV
                 offJet_csv[i] = offlineCSV
                 offJet_num[0] = i + 1
                 i+=1
-        
         i=0
         offMuon_num[0] = 0
         for muon in patMuons.product():
@@ -721,6 +752,24 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
                 pfJet_eta[i] = pfJet.eta()
                 pfJet_phi[i] = pfJet.phi()
                 pfJet_mass[i] = pfJet.mass()
+                onlineCSV = -1.
+                onlineDeepCSV = -1.
+                for j in range(0,btagsCSVOnline.product().size()):
+                    jetB = btagsCSVOnline.product().key(j).get()
+                    dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
+                    if dR<0.3:
+                        onineCSV = max(0.,btagsCSVOnline.product().value(j))
+                        break
+               for j in range(0,btagsDCSVOnline.product().size()):
+                    jetB = btagsDCSVOnline.product().key(j).get()
+                    dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
+                    if dR<0.3:
+                        onineCSV = max(0.,btagsDCSVOnline.product().value(j))
+                        break
+                onPFJet_csv[i] = onlineCSV
+                onPFJet_deepcsv[i] = onlineDeepCSV
+                onPFJet_num[0] = i + 1
+                i+=1
                 pfJet_offmatch[i] = matching(pfJet.eta(),pfJet.phi(),offJet_eta,offJet_phi,offJet_num[0])
                 pfJet_num[0] = i+1
                 for pfbjet in pfbjets:
