@@ -921,5 +921,5 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
 
 maxevents=200
 fileOutput = 'tree.root'
-filesInput = 'outputFULL.root'
+#filesInput = 'outputFULL.root'
 launchNtupleFromAOD2017(fileOutput,filesInput,maxevents)
