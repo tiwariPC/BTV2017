@@ -709,8 +709,8 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
         collectionKeysForBtag = getCollectionKeys(triggerEvent.product(),ROOT.edm.InputTag(calojetCollectionForBtag,"",HLTprocess))
         i=0
         caloJet_num[0] = 0
-        for key in collectionKeys:
-            caloJet = trigObjColl[key]
+        for keys in collectionKeys:
+            caloJet = trigObjColl[keys]
             if caloJet.pt()<20: continue
             if i<maxJets:
                 caloJet_pt[i] = caloJet.pt()
@@ -744,8 +744,8 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
         collectionKeysForBtag = getCollectionKeys(triggerEvent.product(),ROOT.edm.InputTag(pfjetCollectionForBtag,"",HLTprocess))
         i=0
         pfJet_num[0] = 0
-        for key in collectionKeys:
-            pfJet = trigObjColl[key]
+        for keys in collectionKeys:
+            pfJet = trigObjColl[keys]
             if pfJet.pt()<20: continue
             if i<maxJets:
                 pfJet_pt[i] = pfJet.pt()
