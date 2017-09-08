@@ -768,8 +768,6 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
                         break
                 onPFJet_csv[i] = onlineCSV
                 onPFJet_deepcsv[i] = onlineDeepCSV
-                onPFJet_num[0] = i + 1
-                i+=1
                 pfJet_offmatch[i] = matching(pfJet.eta(),pfJet.phi(),offJet_eta,offJet_phi,offJet_num[0])
                 pfJet_num[0] = i+1
                 for pfbjet in pfbjets:
