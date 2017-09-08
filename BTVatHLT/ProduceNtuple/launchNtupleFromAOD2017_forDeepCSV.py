@@ -246,8 +246,8 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
     btags_b, btagLabel_b = Handle("edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>"),("pfDeepCSVJetTags:probb")#("pfCombinedInclusiveSecondaryVertexV2BJetTags") #("pfCombinedSecondaryVertexBJetTags")
     btags_bb, btagLabel_bb = Handle("edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>"),("pfDeepCSVJetTags:probbb")#("pfCombinedInclusiveSecondaryVertexV2BJetTags")
     
-    btagsCSVOnline, btagLabelCSVOnline = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ("hltCombinedSecondaryVertexBJetTagsPF"), ('HLTprocess')
-    btagsDCSVOnline, btagLabelDCSVOnline = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ("hltDeepCombinedSecondaryVertexBJetTagsPF:probb"), ('HLTprocess')
+    btagsCSVOnline, btagLabelCSVOnline, processname = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ("hltCombinedSecondaryVertexBJetTagsPF"),(HLTprocess)
+    btagsDCSVOnline, btagLabelDCSVOnline, processname = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ("hltDeepCombinedSecondaryVertexBJetTagsPF:probb"),(HLTprocess)
     
     if MC:
 #        btagLabel = ("combinedInclusiveSecondaryVertexV2BJetTags")
@@ -588,8 +588,9 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
         event.getByLabel(btagLabel, btags)
         event.getByLabel(btagLabel_b, btags_b)
         event.getByLabel(btagLabel_bb, btags_bb)
-        event.getByLabel(btagLabelCSVOnline, btagsCSVOnline)
-        event.getByLabel(btagLabelDCSVOnline, btagsDCSVOnline)
+        ##RAW
+        event.getByLabel(processname, btagLabelCSVOnline, btagsCSVOnline)
+        event.getByLabel(processname, btagLabelDCSVOnline, btagsDCSVOnline)
 
         nVertices[0] = recoVertexs.product().size()
         run[0] = event.eventAuxiliary().run()
