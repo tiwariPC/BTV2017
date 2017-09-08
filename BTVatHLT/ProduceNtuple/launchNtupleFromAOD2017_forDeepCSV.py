@@ -246,8 +246,9 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
     btags_b, btagLabel_b = Handle("edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>"),("pfDeepCSVJetTags:probb")#("pfCombinedInclusiveSecondaryVertexV2BJetTags") #("pfCombinedSecondaryVertexBJetTags")
     btags_bb, btagLabel_bb = Handle("edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>"),("pfDeepCSVJetTags:probbb")#("pfCombinedInclusiveSecondaryVertexV2BJetTags")
     
-    btagsCSVOnline, btagLabelCSVOnline, labelName, processname = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ("hltCombinedSecondaryVertexBJetTagsPF"),(" "), (HLTprocess)
-    btagsDCSVOnline, btagLabelDCSVOnline, processname = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ("hltDeepCombinedSecondaryVertexBJetTagsPF:probb"),(HLTprocess)
+    #btagsCSVOnline, btagLabelCSVOnline, labelName, processname = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ('hltCombinedSecondaryVertexBJetTagsPF'),(''), (HLTprocess)
+    btagsCSVOnline, btagLabelCSVOnline, processname = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ('hltCombinedSecondaryVertexBJetTagsPF'),(HLTprocess)
+    btagsDCSVOnline, btagLabelDCSVOnline, processname = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ("hltDeepCombinedSecondaryVertexBJetTagsPF"),(HLTprocess)
     
     if MC:
 #        btagLabel = ("combinedInclusiveSecondaryVertexV2BJetTags")
@@ -589,8 +590,8 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
         event.getByLabel(btagLabel_b, btags_b)
         event.getByLabel(btagLabel_bb, btags_bb)
         ##RAW
-        event.getByLabel( btagLabelCSVOnline, labelName, processname, btagsCSVOnline)
-        event.getByLabel( btagLabelDCSVOnline, processname, btagsDCSVOnline)
+        event.getByLabel( btagLabelCSVOnline,  '', 'reHLT', btagsCSVOnline)
+        event.getByLabel( btagLabelDCSVOnline, 'probb', 'reHLT', btagsDCSVOnline)
 
         nVertices[0] = recoVertexs.product().size()
         run[0] = event.eventAuxiliary().run()
@@ -759,13 +760,13 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
                     jetB = btagsCSVOnline.product().key(j).get()
                     dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
                     if dR<0.3:
-                        onineCSV = max(0.,btagsCSVOnline.product().value(j))
+                        onlineCSV = max(0.,btagsCSVOnline.product().value(j))
                         break
                 for j in range(0,btagsDCSVOnline.product().size()):
                     jetB = btagsDCSVOnline.product().key(j).get()
                     dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
                     if dR<0.3:
-                        onineDeepCSV = max(0.,btagsDCSVOnline.product().value(j))
+                        onlineDeepCSV = max(0.,btagsDCSVOnline.product().value(j))
                         break
                 onPFJet_csv[i] = onlineCSV
                 onPFJet_deepcsv[i] = onlineDeepCSV
@@ -918,8 +919,7 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
     f.Write()
     f.Close()
 
-#maxevents=200
-#fileOutput = 'tree.root'
-#filesInput=[
-#]
-#launchNtupleFromAOD(fileOutput,filesInput,maxevents)
+maxevents=200
+fileOutput = 'tree.root'
+filesInput = 'outputFULL.root'
+launchNtupleFromAOD2017(fileOutput,filesInput,maxevents)
