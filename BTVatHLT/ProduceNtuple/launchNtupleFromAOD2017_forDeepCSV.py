@@ -622,17 +622,17 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
                     if dR<0.3:
                         offlineCSV = max(0.,btags.product().value(j))
                         break
-                for j in range(0,btags_b.product().size()):
-                    jetB = btags_b.product().key(j).get()
+                for k in range(0,btags_b.product().size()):
+                    jetB = btags_b.product().key(k).get()
                     dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
                     if dR<0.3:
-                        offlineDeepCSV_b = max(0.,btags_b.product().value(j))
+                        offlineDeepCSV_b = max(0.,btags_b.product().value(k))
                         break
-                for j in range(0,btags_bb.product().size()):
-                    jetB = btags_bb.product().key(j).get()
+                for l in range(0,btags_bb.product().size()):
+                    jetB = btags_bb.product().key(l).get()
                     dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
                     if dR<0.3:
-                        offlineDeepCSV_bb = max(0.,btags_bb.product().value(j))
+                        offlineDeepCSV_bb = max(0.,btags_bb.product().value(l))
                         break
                 offlineDeepCSV = offlineDeepCSV_b + offlineDeepCSV_bb
                 offJet_deepcsv[i] = offlineDeepCSV
