@@ -591,9 +591,7 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
         event.getByLabel(btagLabel_bb, btags_bb)
         ##RAW
         event.getByLabel( btagLabelCSVOnline,  '', 'reHLT', btagsCSVOnline)
-        if not event.getByLabel( btagLabelCSVOnline,  '', 'reHLT', btagsCSVOnline): continue
         event.getByLabel( btagLabelDCSVOnline, 'probb', 'reHLT', btagsDCSVOnline)
-        if not event.getByLabel( btagLabelDCSVOnline, 'probb', 'reHLT', btagsDCSVOnline): continue
 
         nVertices[0] = recoVertexs.product().size()
         run[0] = event.eventAuxiliary().run()
@@ -758,14 +756,14 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
                 pfJet_mass[i] = pfJet.mass()
                 onlineCSV = -1.
                 onlineDeepCSV = -1.
-                if not btagsCSVOnline.product(): continue
+                if not event.getByLabel( btagLabelCSVOnline,  '', 'reHLT', btagsCSVOnline): continue
                 for j in range(0,btagsCSVOnline.product().size()):
                     jetB = btagsCSVOnline.product().key(j).get()
                     dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
                     if dR<0.3:
                         onlineCSV = max(0.,btagsCSVOnline.product().value(j))
                         break
-                if not btagsDCSVOnline.product() : continue
+                if not event.getByLabel( btagLabelDCSVOnline, 'probb', 'reHLT', btagsDCSVOnline): continue
                 for j in range(0,btagsDCSVOnline.product().size()):
                     jetB = btagsDCSVOnline.product().key(j).get()
                     dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
