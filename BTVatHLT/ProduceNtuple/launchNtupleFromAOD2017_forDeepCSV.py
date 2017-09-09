@@ -247,8 +247,8 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
     btags_bb, btagLabel_bb = Handle("edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>"),("pfDeepCSVJetTags:probbb")#("pfCombinedInclusiveSecondaryVertexV2BJetTags")
     
     #btagsCSVOnline, btagLabelCSVOnline, labelName, processname = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ('hltCombinedSecondaryVertexBJetTagsPF'),(''), (HLTprocess)
-    btagsCSVOnline, btagLabelCSVOnline, processname = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ('hltCombinedSecondaryVertexBJetTagsPF'),(HLTprocess)
-    btagsDCSVOnline, btagLabelDCSVOnline, processname = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ("hltDeepCombinedSecondaryVertexBJetTagsPF"),(HLTprocess)
+    btagsCSVOnline, btagLabelCSVOnline = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ('hltCombinedSecondaryVertexBJetTagsPF')
+    btagsDCSVOnline, btagLabelDCSVOnline = Handle('edm::AssociationVector<edm::RefToBaseProd<reco::Jet>,vector<float>,edm::RefToBase<reco::Jet>,unsigned int,edm::helper::AssociationIdenticalKeyReference>'), ("hltDeepCombinedSecondaryVertexBJetTagsPF")
     
     if MC:
 #        btagLabel = ("combinedInclusiveSecondaryVertexV2BJetTags")
