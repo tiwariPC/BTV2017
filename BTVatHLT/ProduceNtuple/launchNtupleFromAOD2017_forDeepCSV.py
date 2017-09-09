@@ -590,7 +590,9 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
         event.getByLabel(btagLabel_b, btags_b)
         event.getByLabel(btagLabel_bb, btags_bb)
         ##RAW
+        if not btagLabelCSVOnline: continue
         event.getByLabel( btagLabelCSVOnline,  '', 'reHLT', btagsCSVOnline)
+        if not btagLabelDCSVOnline: continue
         event.getByLabel( btagLabelDCSVOnline, 'probb', 'reHLT', btagsDCSVOnline)
 
         nVertices[0] = recoVertexs.product().size()
