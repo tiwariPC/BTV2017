@@ -758,14 +758,14 @@ def launchNtupleFromAOD2017(fileOutput,filesInput,maxevents):
                 pfJet_mass[i] = pfJet.mass()
                 onlineCSV = -1.
                 onlineDeepCSV = -1.
-                if btagsCSVOnline.product().size() <= 0: continue
+                if not btagsCSVOnline.product(): continue
                 for j in range(0,btagsCSVOnline.product().size()):
                     jetB = btagsCSVOnline.product().key(j).get()
                     dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
                     if dR<0.3:
                         onlineCSV = max(0.,btagsCSVOnline.product().value(j))
                         break
-                if btagsDCSVOnline.product().size() <= 0: continue
+                if not btagsDCSVOnline.product() : continue
                 for j in range(0,btagsDCSVOnline.product().size()):
                     jetB = btagsDCSVOnline.product().key(j).get()
                     dR = deltaR(jetB.eta(),jetB.phi(),jet.eta(),jet.phi())
